@@ -16,3 +16,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::any('phpinfo',function (){
+    phpinfo();
+});
+
+Route::any('prueba',function(){
+    return \App\Models\Rossi\Turno::first();
+});

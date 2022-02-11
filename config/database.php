@@ -90,6 +90,17 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
+        'conexion_db_rossi' => [
+            'driver' => 'oracle',
+            'host' => '192.168.101.8',
+            'port' => '1521',
+            'database' => 'EGES_TEST',
+            'service_name' => 'EGESPRUE',
+            'username' => 'CONSULTA',
+            'password' => 'consult42022',
+            'charset' => '',
+            'prefix' => '',
+        ],
 
     ],
 
