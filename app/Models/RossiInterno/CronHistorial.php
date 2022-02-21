@@ -35,7 +35,7 @@ class CronHistorial extends RossiInternoModel
             $nuevo->cantidad_modificada = $modificados;
             $nuevo->save();
             if ($fallos !== 0) {
-                Http::withToken(env('SCMA_TOKEN'))->post(env('SCMA_BASE_URL') . env('SCMA_URL_SEND_SMS'), [
+                Http::accept('application/json')->withToken(env('SCMA_TOKEN'))->post(env('SCMA_BASE_URL') . env('SCMA_URL_SEND_SMS'), [
                     "message" => [
                         "text" => "Fallo en Rossi " . $fallos
                     ],

@@ -158,7 +158,7 @@ class Turno extends RossiModel
     public function enviarAMas() : bool
     {
         try {
-            $request = Http::withToken(env('SCMA_TOKEN'))->post(env('SCMA_BASE_URL') . env('SCMA_URL_ROSI_PUSH'), $this->postMas);
+            $request = Http::accept('application/json')->withToken(env('SCMA_TOKEN'))->post(env('SCMA_BASE_URL') . env('SCMA_URL_ROSI_PUSH'), $this->postMas);
             if (!$request->successful()) {
                 throw new \Exception($request->body());
             } else {
