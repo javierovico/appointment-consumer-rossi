@@ -3,6 +3,7 @@
 namespace App\Models\Rossi;
 
 use App\Models\RossiInterno\TurnoProcesado;
+use App\Models\RossiInterno\TurnoProcesadoError;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 
 /**
@@ -156,8 +158,19 @@ class Turno extends RossiModel
     public function enviarAMas() : bool
     {
         try {
-            return Http::withToken(env('SCMA_TOKEN'))->post(env('SCMA_BASE_URL') . env('SCMA_URL_ROSI_PUSH'), $this->postMas)->successful();
+            $request = Http::withToken(env('SCMA_TOKEN'))->post(env('SCMA_BASE_URL') . env('SCMA_URL_ROSI_PUSH'), $this->postMas);
+            if (!$request->successful()) {
+                throw new \Exception($request->body());
+            } else {
+                return true;
+            }
         } catch (\Throwable $e) {
+            Log::error($e);
+            try {
+                TurnoProcesadoError::makeError($this->tur_id,$e);
+            } catch (\Throwable $e){
+
+            }
             return false;
         }
     }
