@@ -91,17 +91,34 @@ return [
             'prefix_indexes' => true,
         ],
         'conexion_db_rossi' => [
-            'driver' => 'oracle',
-            'host' => '192.168.101.8',
-            'port' => '1521',
-            'database' => 'EGES_TEST',
-            'service_name' => 'EGESPRUE',
-            'username' => 'CONSULTA',
-            'password' => 'consult42022',
+            'driver' => env('DB_ROSSI_DRIVE'),
+            'host' => env('DB_ROSSI_HOST'),
+            'port' => env('DB_ROSSI_PORT'),
+            'database' => env('DB_ROSSI_DATABASE'),
+            'service_name' => env('DB_ROSSI_SID'),
+            'username' => env('DB_ROSSI_USERNAME'),
+            'password' => env('DB_ROSSI_PASSWORD'),
             'charset' => '',
             'prefix' => '',
         ],
-
+        'conexion_db_rossi_interno' => [
+            'driver' => env('DB_ROSSI_INTERNO_DRIVE'),
+            'host' => env('DB_ROSSI_INTERNO_HOST'),
+            'port' => env('DB_ROSSI_INTERNO_PORT'),
+            'database' => env('DB_ROSSI_INTERNO_DATABASE'),
+            'service_name' => env('DB_ROSSI_INTERNO_SID'),
+            'username' => env('DB_ROSSI_INTERNO_USERNAME'),
+            'password' => env('DB_ROSSI_INTERNO_PASSWORD'),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ]
     ],
 
     /*

@@ -2,8 +2,10 @@
 
 namespace App\Console;
 
+use App\Models\RossiInterno\CronHistorial;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Stringable;
 
 class Kernel extends ConsoleKernel
 {
@@ -16,6 +18,16 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule
+            ->command("rossi:insert-mas")
+            ->timezone('America/Asuncion')
+            ->everyThreeHours()
+            ->withoutOverlapping(300)
+            ->runInBackground()
+            ->onFailure(function () {
+                CronHistorial::registrarEvento(-1,0,0);
+            });
+        ;
     }
 
     /**
