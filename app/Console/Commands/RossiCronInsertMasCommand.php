@@ -44,7 +44,7 @@ class RossiCronInsertMasCommand extends Command
     {
         $inicioOpt = $this->option('inicio');
         $cantidadDiasOpt = $this->option('cantidadDias');
-        $inicio = CarbonImmutable::make($inicioOpt);
+        $inicio = CarbonImmutable::make($inicioOpt)->timezone('America/asuncion');
         $fin = $inicio->addDays($cantidadDiasOpt);
         $turnosErrores = 0;
         $turnosActualizados = 0;

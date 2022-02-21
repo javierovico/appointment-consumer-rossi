@@ -169,7 +169,7 @@ class Turno extends RossiModel
             try {
                 TurnoProcesadoError::makeError($this->tur_id,$e);
             } catch (\Throwable $e){
-
+                Log::error($e);
             }
             return false;
         }
