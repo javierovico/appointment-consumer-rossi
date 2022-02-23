@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Models\RossiInterno\CronHistorial;
+use Carbon\CarbonImmutable;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Stringable;
@@ -25,7 +26,7 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping(300)
             ->runInBackground()
             ->onFailure(function () {
-                CronHistorial::registrarEvento(-1,0,0);
+                CronHistorial::registrarEvento(-1,0,0, CarbonImmutable::now());
             });
         ;
     }

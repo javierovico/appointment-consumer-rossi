@@ -42,6 +42,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property mixed ord_codigo_seguridad
  * @property mixed ord_last_update_date
  * @property Paciente paciente
+ * @property ObraSocialPlan obraSocialPlan
  */
 class Orden extends RossiModel
 {
@@ -51,6 +52,12 @@ class Orden extends RossiModel
     protected $primaryKey = self::COLUMNA_ID;
     const COLUMNA_ID = 'ord_id';
     const COLUMNA_PACIENTE_ID = 'ord_paciente_id';
+    const COLUMNA_OBRA_SOCIAL_PLAN_ID = 'ord_osp_id';
+
+    /** relaciones de base */
+    const RELACION_OBRA_SOCIAL_PLAN = 'obraSocialPlan';
+    const RELACION_PACIENTE = 'paciente';
+    const RELACION_TURNOS = 'turnos';
 
     public function turnos(): HasMany
     {
@@ -61,4 +68,10 @@ class Orden extends RossiModel
     {
         return $this->belongsTo(Paciente::class, self::COLUMNA_PACIENTE_ID, Paciente::COLUMNA_ID);
     }
+
+    public function obraSocialPlan(): BelongsTo
+    {
+        return $this->belongsTo(ObraSocialPlan::class, self::COLUMNA_OBRA_SOCIAL_PLAN_ID);
+    }
+
 }

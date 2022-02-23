@@ -19,7 +19,7 @@ class TurnoProcesado extends RossiInternoModel
 {
 
     use HasFactory;
-    const tableName = 'turnos_procesados';
+    const tableName = 'turnos';
     protected $table = self::tableName;
     protected $primaryKey = self::COLUMNA_ID;
     const COLUMNA_ID = 'id';
@@ -62,7 +62,7 @@ class TurnoProcesado extends RossiInternoModel
         $turnoProcesado->fecha_turno = $turno->tur_fecha;
         $turnoProcesado->sha1 = $turno->sha1;
         $turnoProcesado->save();
-        RegistroCambio::makeFromTurnoProcesado($turnoProcesado, $turno->arrayMas);
+        RegistroCambio::makeFromTurnoProcesado($turnoProcesado, $turno->postMas);
         return $turnoProcesado;
     }
 

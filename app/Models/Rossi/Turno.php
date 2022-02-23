@@ -89,10 +89,17 @@ class Turno extends RossiModel
     const COLUMNA_ORDEN_ID = 'tur_orden_id';
     const COLUMNA_FECHA_TURNO = 'tur_fecha';
     const COLUMNA_ESTADO_ID = 'tur_estado';
+    const COLUMNA_LAST_UPDATE_DATE = 'tur_last_update_date';
+
+    /** Constantes de relacion */
+    const RELACION_PRACTICAS = 'practicas';
+    const RELACION_ORDEN = 'orden';
+    const RELACION_ESTADO = 'estado';
+    const RELACION_PRACTICA_TURNOS = 'practicaTurnos';
 
     public function orden(): BelongsTo
     {
-        return $this->belongsTo(Orden::class,self::COLUMNA_ORDEN_ID . '', Orden::COLUMNA_ID . '');
+        return $this->belongsTo(Orden::class,self::COLUMNA_ORDEN_ID, Orden::COLUMNA_ID);
     }
 
     public function estado(): BelongsTo
@@ -107,7 +114,7 @@ class Turno extends RossiModel
 
     public function practicas(): BelongsToMany
     {
-        return $this->belongsToMany(Practica::class, PracticaTurno::tableName, PracticaTurno::COLUMNA_TURNO_ID,PracticaTurno::COLUMNA_PRACTICA_ID);//,self::COLUMNA_ID,Practica::COLUMNA_ID);
+        return $this->belongsToMany(Practica::class, PracticaTurno::tableName, PracticaTurno::COLUMNA_TURNO_ID,PracticaTurno::COLUMNA_PRACTICA_ID);
     }
 
     /**
@@ -117,7 +124,21 @@ class Turno extends RossiModel
     public function getArrayMasAttribute(): array
     {
         return [
-            'practicas' => $this->practicas->map(fn(Practica $p) => collect($p->toArray())->only([Practica::COLUMNA_ID, Practica::COLUMNA_DESCRIPCION])->all()),
+            Orden::COLUMNA_ID => $this->orden->ord_id,
+            Turno::COLUMNA_ID => $this->tur_id,
+            Turno::RELACION_PRACTICAS => $this->practicas->filter(fn(Practica $p)=>$p->isPracticaRelevante)->map(function(Practica $p){
+                return [
+                    Practica::COLUMNA_ID => $p->pra_id,
+                    Practica::COLUMNA_CODIGO => $p->pra_codigo,
+                    Practica::COLUMNA_DESCRIPCION => $p->pra_descripcion,
+                    ServicioEspecialidad::COLUMNA_NOMBRE => $p->servicioEspecialidad->ses_nombre,
+                ];
+            }),
+            Paciente::COLUMNA_ID => $this->orden->paciente->pac_id,
+            'tipoDocumento' => $this->orden->paciente->tipoDocumento->tid_descripcion,
+            'documento' => $this->orden->paciente->pac_nro_documento,
+            'planFinanciador' => $this->orden->obraSocialPlan->osp_nombre,
+            'financiador' => $this->orden->obraSocialPlan->obraSocial->oso_nombre,
         ];
     }
 

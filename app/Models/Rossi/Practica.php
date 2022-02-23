@@ -5,6 +5,7 @@ namespace App\Models\Rossi;
 
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Practica
@@ -50,6 +51,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property mixed pra_habilitada_web
  * @property mixed pra_horas_entrevista
  * @property mixed pra_es_nomenclada
+ * @property ServicioEspecialidad servicioEspecialidad
+ * @property bool $isPracticaRelevante
  */
 class Practica extends RossiModel
 {
@@ -59,6 +62,23 @@ class Practica extends RossiModel
     protected $primaryKey = self::COLUMNA_ID;
     const COLUMNA_ID = 'pra_id';
     const COLUMNA_DESCRIPCION = 'pra_descripcion';
+    const COLUMNA_SERVICIO_ESPECIALIDAD_ID = 'pra_servicio_especialidad_id';
+    const COLUMNA_CREATION_DATE = 'pra_creation_date';
+    const COLUMNA_CODIGO = 'pra_codigo';
+    /** Constantes de las relaciones */
+    const RELACION_SERVICIO_ESPECIALIDAD = 'servicioEspecialidad';
 
+    public function servicioEspecialidad(): BelongsTo
+    {
+        return $this->belongsTo(ServicioEspecialidad::class,self::COLUMNA_SERVICIO_ESPECIALIDAD_ID);
+    }
 
+    /**
+     * Definimos si la practica es o no relevante (hay practicas que no se consideran, como "desechables" y "contraste")
+     * @return bool
+     */
+    public function getIsPracticaRelevanteAttribute(): bool
+    {
+        return !in_array($this->pra_servicio_especialidad_id,[ServicioEspecialidad::ID_ESPECIALIDAD_CONTRASTE, ServicioEspecialidad::ID_ESPECIALIDAD_DESCARTABLE]);
+    }
 }

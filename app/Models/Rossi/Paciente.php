@@ -57,6 +57,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property mixed pac_autoriza_invest_estudios
  * @property Localidad localidad
  * @property Provincia provincia
+ * @property TipoDocumento tipoDocumento
  */
 class Paciente extends RossiModel
 {
@@ -67,6 +68,12 @@ class Paciente extends RossiModel
     const COLUMNA_ID = 'pac_id';
     const COLUMNA_LOCALIDAD_ID = 'pac_domicilio_localidad';
     const COLUMNA_PROVINCIA_ID = 'pac_domicilio_id_provincia';
+    const COLUMNA_TIPO_DOCUMENTO_ID = 'pac_tipo_documento_id';
+    const COLUMNA_NRO_DOCUMENTO = 'pac_nro_documento';
+
+    const RELACION_LOCALIDAD = 'localidad';
+    const RELACION_PROVINCIA = 'provincia';
+    const RELACION_TIPO_DOCUMENTO = 'tipoDocumento';
 
     public function localidad(): BelongsTo
     {
@@ -78,4 +85,8 @@ class Paciente extends RossiModel
         return $this->belongsTo(Provincia::class, self::COLUMNA_PROVINCIA_ID);
     }
 
+    public function tipoDocumento(): BelongsTo
+    {
+        return $this->belongsTo(TipoDocumento::class, self::COLUMNA_TIPO_DOCUMENTO_ID);
+    }
 }
