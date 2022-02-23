@@ -69,6 +69,7 @@ class RossiCronInsertMasCommand extends Command
         $turnosCreados = 0;
         $this->info('Desde: ' . $inicio->format('Y-m-d H:i:s'));
         $this->info('Hasta: ' . $fin->format('Y-m-d H:i:s'));
+        $this->info('Ultima ejecucion Tomada: ' . $ultimaEjecucionTarea->format('Y-m-d H:i:s'));
         Turno::query()
             ->with([
                 Turno::RELACION_ORDEN . '.' . Orden::RELACION_OBRA_SOCIAL_PLAN . '.' . ObraSocialPlan::RELACION_OBRA_SOCIAL,
