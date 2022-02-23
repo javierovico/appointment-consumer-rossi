@@ -159,8 +159,8 @@ class Turno extends RossiModel
             "phoneMas" => ($this->orden->paciente->pac_telefono_movil ?: $this->orden->paciente->pac_telefono_laboral) ?: $this->orden->paciente->pac_domicilio_telefono,
             "mobileMas" => $this->orden->paciente->pac_telefono_laboral ?: $this->orden->paciente->pac_domicilio_telefono,
             "addressMas" => $this->orden->paciente->pac_domicilio_calle . ' ' . $this->orden->paciente->pac_domicilio_nro,
-            "stateMas" => $this->orden->paciente->provincia->pro_nombre,
-            "cityMas" => $this->orden->paciente->localidad->loc_nombre,
+            "stateMas" => $this->orden->paciente->provincia?$this->orden->paciente->provincia->pro_nombre:'',
+            "cityMas" => $this->orden->paciente->localidad?$this->orden->paciente->localidad->loc_nombre:'',
             "commentsMas" => "Insertado Nuevo",
             "customDataMas" => $this->arrayMas,
         ];
