@@ -22,7 +22,7 @@ class RossiCronInsertMasCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'rossi:insert-mas {--inicio=now} {--cantidadDias=3}';
+    protected $signature = 'rossi:insert-mas {--inicio=now} {--cantidadDias=3} {--ultimaEjecucion}';
 
     /**
      * The console command description.
