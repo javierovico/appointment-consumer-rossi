@@ -62,6 +62,9 @@ class RossiCronInsertMasCommand extends Command
             //por defecto asumimos que debemos traer las que se modificaron en las ultimas cinco horas
             $ultimaEjecucionTarea = CarbonImmutable::now()->addHours(-5);
         }
+        if ($inicioOpt == 'now' && $inicio->gt($ultimaEjecucionTarea)) { //si no se introdujo manualmente el inicioy si el inicio es posterior a la ultima ejecucion
+            $inicio = $ultimaEjecucionTarea;    //se establece el inicio como la ultima ejecucion success (para evitar citas perdidas)
+        }
         $ultimaEjecucionTarea = $ultimaEjecucionTarea->setTimezone('America/Argentina/Buenos_Aires');       //estableemos a la hora local argentina, porque es la hora de nuestra base de datos
         $fin = $inicio->addDays($cantidadDiasOpt);
         $turnosErrores = 0;
