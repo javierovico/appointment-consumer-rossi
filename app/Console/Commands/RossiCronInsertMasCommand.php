@@ -118,6 +118,6 @@ class RossiCronInsertMasCommand extends Command
         $this->info("Creados: " . $turnosCreados);
         $this->info("Actualizados: " . $turnosActualizados);
         CronHistorial::registrarEvento($turnosErrores, $turnosCreados, $turnosActualizados, $inicioEjecucionTarea);
-        return -$turnosErrores;
+        return 0;
     }
 }
