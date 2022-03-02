@@ -45,8 +45,8 @@ class CronHistorial extends RossiInternoModel
                     "message" => [
                         "text" => "Fallo en Rossi " . $fallos
                     ],
-                    "sender" => "0981000001",
-                    "addresses" => ["595994467972"]
+                    "sender" => env('SMS_ERROR_EMISOR'),
+                    "addresses" => explode(',',env('SMS_ERROR_RECEPTOR'))
                 ]);
             }
         } catch (\Throwable $e){
