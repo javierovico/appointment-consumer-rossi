@@ -73,8 +73,13 @@ use Illuminate\Support\Facades\Log;
  * @property Estado estado
  * @property Collection<Practica> practicas
  * @property string sha1
+ *
  * @property array arrayMas
+ * @see Turno::getArrayMasAttribute()
+ *
  * @property array postMas
+ * @see Turno::getPostMasAttribute()
+ *
  * @property TurnoProcesado turnoProcesado
  * @property bool isTurnoMasEnviable
  * @property bool isTurnoMasExistente
@@ -133,7 +138,7 @@ class Turno extends RossiModel
                     Practica::COLUMNA_DESCRIPCION => $p->pra_descripcion,
                     ServicioEspecialidad::COLUMNA_NOMBRE => $p->servicioEspecialidad->ses_nombre,
                 ];
-            }),
+            })->values()->toArray(),
             Paciente::COLUMNA_ID => $this->orden->paciente->pac_id,
             'tipoDocumento' => $this->orden->paciente->tipoDocumento->tid_descripcion,
             'documento' => $this->orden->paciente->pac_nro_documento,
