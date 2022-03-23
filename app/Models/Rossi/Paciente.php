@@ -20,7 +20,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property mixed pac_domicilio_localidad
  * @property mixed pac_domicilio_id_provincia
  * @property mixed pac_domicilio_telefono
- * @property mixed pac_telefono_movil
+ *
+ * @property string pac_telefono_movil pasa por
+ * @see Paciente::COLUMNA_TELEFONO_MOVIL    contiene el valor de la columna
+ * @see Paciente::getPacTelefonoMovilAttribute()    es el getter del atributo
+ *
  * @property mixed pac_email
  * @property mixed pac_delete_flag
  * @property mixed pac_creation_usr
@@ -70,6 +74,7 @@ class Paciente extends RossiModel
     const COLUMNA_PROVINCIA_ID = 'pac_domicilio_id_provincia';
     const COLUMNA_TIPO_DOCUMENTO_ID = 'pac_tipo_documento_id';
     const COLUMNA_NRO_DOCUMENTO = 'pac_nro_documento';
+    const COLUMNA_TELEFONO_MOVIL = 'pac_telefono_movil';
 
     const RELACION_LOCALIDAD = 'localidad';
     const RELACION_PROVINCIA = 'provincia';
@@ -88,5 +93,17 @@ class Paciente extends RossiModel
     public function tipoDocumento(): BelongsTo
     {
         return $this->belongsTo(TipoDocumento::class, self::COLUMNA_TIPO_DOCUMENTO_ID);
+    }
+
+    /**
+     * @property string Paciente::pac_telefono_movil
+     */
+    public function getPacTelefonoMovilAttribute(): string
+    {
+        if($this->attributes[self::COLUMNA_TELEFONO_MOVIL]) {
+            return '549' . ($this->pac_codigo_area?:'') . $this->attributes[self::COLUMNA_TELEFONO_MOVIL];
+        } else {
+            return '';
+        }
     }
 }
