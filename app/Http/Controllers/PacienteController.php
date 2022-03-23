@@ -10,7 +10,6 @@ class PacienteController extends Controller
 {
     public function getPacienteByDNI(Request $request, $dni)
     {
-        Artisan::call('rossi:insert-mas');
         return Paciente::where(Paciente::COLUMNA_NRO_DOCUMENTO, $dni)->firstOrFail();
     }
 }
