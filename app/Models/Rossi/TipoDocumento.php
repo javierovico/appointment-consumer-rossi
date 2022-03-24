@@ -19,4 +19,6 @@ class TipoDocumento extends RossiModel
     protected $table = self::tableName;
     protected $primaryKey = self::COLUMNA_ID;
     const COLUMNA_ID = 'tid_id';
+
+    const DESCRIPCION_DNI = 'DNI';
 }
