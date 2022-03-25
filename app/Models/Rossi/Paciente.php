@@ -2,6 +2,7 @@
 
 namespace App\Models\Rossi;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -79,6 +80,14 @@ class Paciente extends RossiModel
     const RELACION_LOCALIDAD = 'localidad';
     const RELACION_PROVINCIA = 'provincia';
     const RELACION_TIPO_DOCUMENTO = 'tipoDocumento';
+
+    public static function getFromDni($dni): self
+    {
+        return Paciente::where(Paciente::COLUMNA_NRO_DOCUMENTO, $dni)
+            ->whereHas(Paciente::RELACION_TIPO_DOCUMENTO,fn(Builder $q) => $q->where(TipoDocumento::COLUMNA_DESCRIPCION, TipoDocumento::DESCRIPCION_DNI))
+            ->first()
+        ;
+    }
 
     public function localidad(): BelongsTo
     {
