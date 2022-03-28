@@ -9,6 +9,56 @@ use Illuminate\Http\Request;
 
 class PacienteController extends Controller
 {
+
+    public function getPaciente(Request $request)
+    {
+        $request->validate([
+            'tipoDocumento' => 'required|in:DNI,LC,LE,CI,PASS',
+            'numeroDocumento' => 'required'
+        ]);
+        $numeroDocumento = $request->get('numeroDocumento');
+        switch ($request->get('tipoDocumento')) {
+            case 'DNI':
+                $tipoDocumento = TipoDocumento::DESCRIPCION_DNI;
+                break;
+            case 'LC':
+                $tipoDocumento = TipoDocumento::DESCRIPCION_LC;
+                break;
+            case 'LE':
+                $tipoDocumento = TipoDocumento::DESCRIPCION_LE;
+                break;
+            case 'CI':
+                $tipoDocumento = TipoDocumento::DESCRIPCION_CI;
+                break;
+            case 'PASS':
+                $tipoDocumento = TipoDocumento::DESCRIPCION_PASS;
+                break;
+            default:
+                throw new \RuntimeException("Tipo Documento No definido");
+        }
+        /** @var Paciente $paciente */
+        $paciente =  Paciente::query()
+            ->where(Paciente::COLUMNA_NRO_DOCUMENTO, $numeroDocumento)
+            ->whereHas(Paciente::RELACION_TIPO_DOCUMENTO,fn(Builder $q) => $q->where(TipoDocumento::COLUMNA_DESCRIPCION, $tipoDocumento))
+            ->firstOrFail()
+        ;
+        return [
+            'id' => $paciente->pac_id,
+            'nombre' => $paciente->pac_nombre,
+            'apellido' => $paciente->pac_apellido,
+            'tipoDocumento' => $paciente->tipoDocumento->tid_descripcion,
+            'nroDocumento' => $paciente->pac_nro_documento,
+            'calle' => $paciente->pac_domicilio_calle?:'',
+            'nroCasa' => $paciente->pac_domicilio_nro?:'',
+            'localidad' => $paciente->localidad?$paciente->localidad->loc_nombre:'',
+            'provincia' => $paciente->provincia?$paciente->provincia->pro_nombre:'',
+            'telefono' => $paciente->pac_telefono_movil,
+            'email' => $paciente->pac_email?:'',
+            'fechaNacimiento' => $paciente->pac_fecha_nacimiento,
+            'crudo' => $paciente,
+        ];
+    }
+
     public function getPacienteByDNI(Request $request, $dni)
     {
         /** @var Paciente $paciente */

@@ -23,6 +23,10 @@ class TipoDocumento extends RossiModel
     const COLUMNA_ID = 'tid_id';
 
     const DESCRIPCION_DNI = 'DNI';
+    const DESCRIPCION_LC = 'LC';
+    const DESCRIPCION_LE = 'LE';
+    const DESCRIPCION_CI = 'Cedula';
+    const DESCRIPCION_PASS = 'Pasaporte';
 
     public function getTidDescripcionAttribute(): string
     {

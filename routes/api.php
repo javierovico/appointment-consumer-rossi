@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('paciente')->group(function(){
+    Route::get('',[PacienteController::class,'getPaciente']);
     Route::get('from-dni/32144152',[PacienteController::class,'getPacienteNico']);
     Route::get('from-dni/4047478',[PacienteController::class,'getPacienteAldo']);
     Route::get('from-dni/{dni}',[PacienteController::class,'getPacienteByDNI']);
