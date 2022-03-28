@@ -36,6 +36,13 @@ class PacienteController extends Controller
             default:
                 throw new \RuntimeException("Tipo Documento No definido");
         }
+        /** INICIO Zona de pruebas temporales */
+        if ($tipoDocumento == 'DNI' and $numeroDocumento == '4047478') {
+            return $this->getPacienteAldo($request);
+        } else if ($tipoDocumento == 'DNI' and $numeroDocumento == '32144152') {
+            return $this->getPacienteNico($request);
+        }
+        /** FIN Zona de pruebas temporales */
         /** @var Paciente $paciente */
         $paciente =  Paciente::query()
             ->where(Paciente::COLUMNA_NRO_DOCUMENTO, $numeroDocumento)
