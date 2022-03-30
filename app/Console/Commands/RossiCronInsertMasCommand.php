@@ -7,6 +7,7 @@ use App\Models\Rossi\ObraSocialPlan;
 use App\Models\Rossi\Orden;
 use App\Models\Rossi\Paciente;
 use App\Models\Rossi\Practica;
+use App\Models\Rossi\RossiModel;
 use App\Models\Rossi\ServicioEspecialidad;
 use App\Models\Rossi\Turno;
 use App\Models\RossiInterno\CronHistorial;
@@ -14,6 +15,7 @@ use App\Models\RossiInterno\TurnoProcesado;
 use Carbon\CarbonImmutable;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class RossiCronInsertMasCommand extends Command
 {
@@ -22,7 +24,7 @@ class RossiCronInsertMasCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'rossi:insert-mas {--inicio=now} {--cantidadDias=3} {--ultimaEjecucion}';
+    protected $signature = 'rossi:insert-mas {--inicio=now} {--cantidadDias=3} {--ultimaEjecucion=} {--databaseQueryOutput=}';
 
     /**
      * The console command description.
@@ -48,6 +50,10 @@ class RossiCronInsertMasCommand extends Command
      */
     public function handle(): int
     {
+        $queryOutput = $this->option('databaseQueryOutput');
+        if ($queryOutput) {
+            DB::connection(RossiModel::CONNECTION_DB)->enableQueryLog();
+        }
         $inicioOpt = $this->option('inicio');
         $cantidadDiasOpt = $this->option('cantidadDias');
         $inicioEjecucionTarea = CarbonImmutable::now('America/Argentina/Buenos_Aires');                 //cuando la tarea se inicio
@@ -121,6 +127,20 @@ class RossiCronInsertMasCommand extends Command
         $this->info("Creados: " . $turnosCreados);
         $this->info("Actualizados: " . $turnosActualizados);
         CronHistorial::registrarEvento($turnosErrores, $turnosCreados, $turnosActualizados, $inicioEjecucionTarea);
+        if ($queryOutput) {
+            $this->info("Crearndo archivo: " . $queryOutput);
+            $query = DB::connection(RossiModel::CONNECTION_DB)->getQueryLog();
+            $querySimples = [];
+            foreach ($query as $q) {
+                $querySimples[] = $q['query'];
+            }
+            $querySimples = array_unique($querySimples);
+            $archivo = fopen($queryOutput,'w');
+            foreach ($querySimples as $q) {
+                fputs($archivo, $q . ';' . PHP_EOL);
+            }
+            fclose($archivo);
+        }
         return 0;
     }
 }
