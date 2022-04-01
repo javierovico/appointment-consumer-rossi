@@ -10,6 +10,79 @@ use Illuminate\Http\Request;
 class PacienteController extends Controller
 {
 
+    const PACIENTES_DNI_TEST = [
+        '23903400' => [
+            'id' => 10,
+            'nombre' => 'Daniel Esteban',
+            'apellido' => 'Belarducci',
+            'tipoDocumento' => 'dni',
+            'nroDocumento' => '23903400',
+            'calle' => 'Sin Nombre',
+            'nroCasa' => '123',
+            'localidad' => 'Localidad Nom',
+            'provincia' => 'Provicia Nom',
+            'telefono' => '5491168193810',
+            'email' => 'nicolas.finelli@skytel.com.ar',
+            'fechaNacimiento' => null,
+        ],
+        '25826740' => [
+            'id' => 11,
+            'nombre' => 'Carina',
+            'apellido' => 'Trenes',
+            'tipoDocumento' => 'dni',
+            'nroDocumento' => '25826740',
+            'calle' => 'Sin Nombre',
+            'nroCasa' => '123',
+            'localidad' => 'Localidad Nom',
+            'provincia' => 'Provicia Nom',
+            'telefono' => '5491168193752',
+            'email' => 'nicolas.finelli@skytel.com.ar',
+            'fechaNacimiento' => null,
+        ],
+        '44554184' => [
+            'id' => 12,
+            'nombre' => 'Aldana',
+            'apellido' => 'Macrino',
+            'tipoDocumento' => 'dni',
+            'nroDocumento' => '44554184',
+            'calle' => 'Sin Nombre',
+            'nroCasa' => '123',
+            'localidad' => 'Localidad Nom',
+            'provincia' => 'Provicia Nom',
+            'telefono' => '5491140250866',
+            'email' => 'nicolas.finelli@skytel.com.ar',
+            'fechaNacimiento' => null,
+        ],
+        '4047478' => [
+            'id' => 13,
+            'nombre' => 'Aldo',
+            'apellido' => 'Ibarra',
+            'tipoDocumento' => 'dni',
+            'nroDocumento' => '4047478',
+            'calle' => 'Sin Nombre',
+            'nroCasa' => '123',
+            'localidad' => 'Localidad Aldo',
+            'provincia' => 'Provicia Aldo',
+            'telefono' => '595971639734',
+            'email' => 'aldo.ibarra@skytel.com.py',
+            'fechaNacimiento' => null,
+        ],
+        '32144152' => [
+            'id' => 14,
+            'nombre' => 'Nicolas',
+            'apellido' => 'Finelli',
+            'tipoDocumento' => 'dni',
+            'nroDocumento' => '32144152',
+            'calle' => 'Sin Nombre',
+            'nroCasa' => '123',
+            'localidad' => 'Localidad Nico',
+            'provincia' => 'Provicia Nico',
+            'telefono' => '5491158102564',
+            'email' => 'nicolas.finelli@skytel.com.ar',
+            'fechaNacimiento' => null,
+        ]
+    ];
+
     public function getPaciente(Request $request)
     {
         $request->validate([
@@ -37,10 +110,8 @@ class PacienteController extends Controller
                 throw new \RuntimeException("Tipo Documento No definido");
         }
         /** INICIO Zona de pruebas temporales */
-        if ($tipoDocumento == 'DNI' and $numeroDocumento == '4047478') {
-            return $this->getPacienteAldo($request);
-        } else if ($tipoDocumento == 'DNI' and $numeroDocumento == '32144152') {
-            return $this->getPacienteNico($request);
+        if ($tipoDocumento == 'DNI' and array_key_exists($numeroDocumento, self::PACIENTES_DNI_TEST)) {
+            return self::PACIENTES_DNI_TEST[$numeroDocumento];
         }
         /** FIN Zona de pruebas temporales */
         /** @var Paciente $paciente */
@@ -91,41 +162,4 @@ class PacienteController extends Controller
         ];
     }
 
-    public function getPacienteNico(Request $request)
-    {
-        $paciente = Paciente::getFromDni('32144152');
-        return [
-            'id' => $paciente->pac_id,
-            'nombre' => $paciente->pac_nombre,
-            'apellido' => $paciente->pac_apellido,
-            'tipoDocumento' => $paciente->tipoDocumento->tid_descripcion,
-            'nroDocumento' => $paciente->pac_nro_documento,
-            'calle' => $paciente->pac_domicilio_calle?:'Sin Nombre',
-            'nroCasa' => $paciente->pac_domicilio_nro?:'123',
-            'localidad' => $paciente->localidad?$paciente->localidad->loc_nombre:'Localidad Nico',
-            'provincia' => $paciente->provincia?$paciente->provincia->pro_nombre:'Provicia Nico',
-            'telefono' => $paciente->pac_telefono_movil?:'5491158102564',
-            'email' => $paciente->pac_email?:'nicolas.finelli@skytel.com.ar',
-            'fechaNacimiento' => $paciente->pac_fecha_nacimiento,
-            'crudo' => $paciente,
-        ];
-    }
-
-    public function getPacienteAldo(Request $request)
-    {
-        return [
-            'id' => 1,
-            'nombre' => 'Aldo',
-            'apellido' => 'Ibarra',
-            'tipoDocumento' => 'dni',
-            'nroDocumento' => '4047478',
-            'calle' => 'Sin Nombre',
-            'nroCasa' => '123',
-            'localidad' => 'Localidad Aldo',
-            'provincia' => 'Provicia Aldo',
-            'telefono' => '595971639734',
-            'email' => 'aldo.ibarra@skytel.com.py',
-            'fechaNacimiento' => null,
-        ];
-    }
 }
