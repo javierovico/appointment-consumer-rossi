@@ -20,7 +20,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return json_encode([
+        'nombre' => config('app.name'),
+        'env' => config('app.env'),
+        'debug' => config('app.debug'),
+    ], JSON_PRETTY_PRINT);
 });
 
 Route::any('phpinfo',function (){
