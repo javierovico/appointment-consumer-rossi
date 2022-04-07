@@ -83,6 +83,12 @@ use Illuminate\Support\Facades\Log;
  * @property TurnoProcesado turnoProcesado
  * @property bool isTurnoMasEnviable
  * @property bool isTurnoMasExistente
+ *
+ * @property Collection $practicasRelevantes
+ * @see Turno::getpracticasRelevantesAttribute()
+ *
+ * @property string $servicioSolicitado
+ * @see Turno::getServicioSolicitadoAttribute()
  */
 class Turno extends RossiModel
 {
@@ -144,6 +150,8 @@ class Turno extends RossiModel
             'documento' => $this->orden->paciente->pac_nro_documento,
             'planFinanciador' => $this->orden->obraSocialPlan->osp_nombre,
             'financiador' => $this->orden->obraSocialPlan->obraSocial->oso_nombre,
+            'TelefonoLlamado' => $this->orden->paciente->telefonoLlamado,
+            'TelefonoWhatsapp' => $this->orden->paciente->telefonoWhatsapp,
         ];
     }
 
@@ -155,6 +163,7 @@ class Turno extends RossiModel
     {
         return [
             "codeCliente" =>  $this->tur_id,
+            "numeroDocumento" => $this->orden->paciente->pac_nro_documento,
             "fechaTurno" => $this->tur_fecha,
             "estadoTurno" => $this->estado->est_nombre,
             "nombreMas" => $this->orden->paciente->pac_nombre ?: $this->orden->paciente->pac_apellido,
@@ -167,6 +176,8 @@ class Turno extends RossiModel
             "stateMas" => $this->orden->paciente->provincia?$this->orden->paciente->provincia->pro_nombre:'',
             "cityMas" => $this->orden->paciente->localidad?$this->orden->paciente->localidad->loc_nombre:'',
             "commentsMas" => "Insertado Nuevo",
+            "nombreMedico" => "Medico", // TODO: @see Orden::ORD_MEDICO_SOLICITANTE_ID
+            "servicioSolicitado" => $this->servicioSolicitado,
             "customDataMas" => $this->arrayMas,
         ];
     }
@@ -229,4 +240,24 @@ class Turno extends RossiModel
     {
         TurnoProcesado::guardar($this);
     }
+
+    /**
+     * @see Turno::practicasRelevantes
+     * @return Collection
+     */
+    public function getpracticasRelevantesAttribute(): Collection
+    {
+        return $this->practicas->filter(fn(Practica $p)=>$p->isPracticaRelevante);
+    }
+
+    /**
+     * @see Turno::servicioSolicitado
+     * @return string
+     */
+    public function getServicioSolicitadoAttribute(): string
+    {
+        return $this->practicasRelevantes->map(fn(Practica $p)=> $p->servicioEspecialidad->ses_nombre)->implode(', ');
+    }
 }
+
+

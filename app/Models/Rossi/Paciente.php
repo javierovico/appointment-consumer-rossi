@@ -63,6 +63,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Localidad localidad
  * @property Provincia provincia
  * @property TipoDocumento tipoDocumento
+ *
+ * @property string $telefonoLlamado
+ * @see Paciente::getTelefonoLlamadoAttribute()
+ *
+ * @property string $telefonoWhatsapp
+ * @see Paciente::getTelefonoWhatsappAttribute()
  */
 class Paciente extends RossiModel
 {
@@ -111,6 +117,24 @@ class Paciente extends RossiModel
     {
         if($this->attributes[self::COLUMNA_TELEFONO_MOVIL]) {
             return '549' . ($this->pac_codigo_area?:'') . $this->attributes[self::COLUMNA_TELEFONO_MOVIL];
+        } else {
+            return '';
+        }
+    }
+
+    public function getTelefonoLlamadoAttribute(): string
+    {
+        if($this->attributes[self::COLUMNA_TELEFONO_MOVIL]) {
+            return ($this->pac_codigo_area?:'') . '15' . $this->attributes[self::COLUMNA_TELEFONO_MOVIL];
+        } else {
+            return '';
+        }
+    }
+
+    public function getTelefonoWhatsappAttribute(): string
+    {
+        if($this->attributes[self::COLUMNA_TELEFONO_MOVIL]) {
+            return '9' . ($this->pac_codigo_area?:'') . $this->attributes[self::COLUMNA_TELEFONO_MOVIL];
         } else {
             return '';
         }
