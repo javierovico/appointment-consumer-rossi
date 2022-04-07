@@ -24,6 +24,7 @@ Route::get('/', function () {
         'nombre' => config('app.name'),
         'env' => config('app.env'),
         'debug' => config('app.debug'),
+        'url' => config('app.url')
     ], JSON_PRETTY_PRINT);
 });
 
